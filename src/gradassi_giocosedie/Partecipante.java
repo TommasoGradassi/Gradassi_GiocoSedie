@@ -32,6 +32,7 @@ class Partecipante extends Thread {
     public void run() {
         try {
             // Attende un tempo casuale tra 0 e 1000 ms
+            Scrittore s=new Scrittore("Risultato.txt");
             sleep((int) (Math.random() * 1000));
 
             // Cerca un posto libero
@@ -39,6 +40,7 @@ class Partecipante extends Thread {
                 if (sedie[i].occupa()) {
                     System.out.println("Sono il Thread " + this.getName()
                             + ". Sono riuscito a sedermi sul posto " + i);
+                    s.scrivi(getId(), i);
                     return; // Se trova un posto, si siede e termina
                 }
             }

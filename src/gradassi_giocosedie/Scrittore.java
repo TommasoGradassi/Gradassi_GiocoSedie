@@ -1,14 +1,4 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-
-/**
- *
- * @author Gradassi Tommaso
- */
 package gradassi_giocosedie;
-
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
@@ -16,50 +6,41 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+public class Scrittore {
 
+    private String nomeFile;
 
-public class Scrittore implements Runnable{
-
-    String nomeFile;
-    
-    public Scrittore(String nomeFile){
+    public Scrittore(String nomeFile) {
         this.nomeFile = nomeFile;
     }
-    
-    
-    @Override
-    public void run() {
-        scrivi();
-    }
+
     /**
-     * Scrive un file di testo usando la classe BufferedWriter
-     * @param id 
-     * @param posti
+     * Scrive nel file di testo usando la classe BufferedWriter
+     * @param id l'ID del partecipante
+     * @param posto il numero del posto occupato
      */
-    public void scrivi(int id ,int posti){
-        BufferedWriter br=null;
-        
+    public synchronized void scrivi(long id, int posto) {
+        BufferedWriter br = null;
+
         try {
-            //1) apro il file
-            br = new BufferedWriter(
-                    new FileWriter(nomeFile));
-            //2) scrivo nel buffer
-            br.write("il thread"+id+"occupa il posto"+posti);
-            br.write("\n\r");
-            //3) svuoto il buffer e salvo nel file i dati
-            br.flush();         
+            // Apro il file in modalità append
+            br = new BufferedWriter(new FileWriter(nomeFile, true));
+            // Scrivo nel buffer
+            br.write("Il thread " + id + " occupa il posto " + posto);
+            br.newLine();  // Aggiunge una nuova linea
+            // Svuoto il buffer e salvo nel file
+            br.flush();
         } catch (IOException ex) {
             Logger.getLogger(Scrittore.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        finally{
-            if (br!=null)
+        } finally {
+            if (br != null) {
                 try {
-                    //4)chiudo lo stream in uscita
+                    // Chiudo lo stream
                     br.close();
-            } catch (IOException ex) {
-                Logger.getLogger(Scrittore.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (IOException ex) {
+                    Logger.getLogger(Scrittore.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
-                
         }
     }
 }
